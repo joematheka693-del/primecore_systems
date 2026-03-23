@@ -16,8 +16,14 @@ const Home = () => {
 
       {/* NAVBAR */}
       <nav className="d-flex justify-content-between align-items-center p-3">
-        <h3 style={{ color: '#ffffff', letterSpacing: '1px' }}>
-          PrimeCore Systems
+        <h3 style={{ color: '#ffffff', letterSpacing: '1px', }}>
+          <a href="/"
+          className='anchor'
+          style={{
+            color: "#f3e9e9"
+          }}>
+            PrimeCore Systems
+            </a>
         </h3>
         <div>
 
@@ -44,7 +50,7 @@ const Home = () => {
           </button>
 
         </div>
-      </nav>
+      </nav> <hr />
 
       {/* HERO SECTION */}
       <div className="text-center mt-5 px-3">
@@ -144,3 +150,4 @@ const cardStyle = {
 };
 
 export default Home;
+

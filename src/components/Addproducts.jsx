@@ -56,6 +56,7 @@ const Addproducts = () => {
         color: "#fff",
       }}
     >
+
       <div
         className="card p-4 col-md-8"
         style={{
@@ -65,6 +66,7 @@ const Addproducts = () => {
           border: "1px solid rgba(0,255,255,0.2)",
         }}
       >
+
         <h2 className="text-center mb-2" style={{ color: "#00ffff" }}>
           PrimeCore Systems
         </h2>
@@ -110,8 +112,9 @@ const Addproducts = () => {
             style={inputStyle}
           />
 
-          <label style={{ color: "#00ffff", fontSize: "14px" }}>
-            Upload PC Image
+          <label 
+          style={{ color: "#00ffff", fontSize: "14px" }}>
+            <h5>Upload PC Image</h5>
           </label> <br /> 
 
           <input

@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import '../App.css'
 
 const Signin = () => {
 
@@ -50,14 +51,54 @@ const Signin = () => {
   };
 
   return (
+    
     <div
-      className="d-flex justify-content-center align-items-center"
+      className="row justify-content-center align-items-center"
       style={{
         minHeight: "100vh",
         background: "linear-gradient(135deg, #0f0f1a, #1a1a2e, #000000)",
         color: "#fff",
-      }}
-    >
+      }}>
+
+        {/* NAVBAR */}
+      <nav className="d-flex justify-content-between p-4">
+        <h3 style={{ color: '#ffffff', letterSpacing: '1px', }}>
+          <a href="/"
+          className='anchor'
+          style={{
+            color: "#00ffff"
+          }}>
+            PrimeCore Systems
+            </a>
+            </h3>
+        <div>
+
+          <button
+            className="btn m-2"
+            style={navBtn}
+            onClick={() => navigate('/signin')}>
+            Sign In
+          </button>
+
+          <button
+            className="btn m-2"
+            style={navBtn}
+            onClick={() => navigate('/signup')}
+          >
+            Sign Up
+          </button>
+
+          <button
+            className="btn m-2"
+            style={navBtn}
+            onClick={() => navigate('/addproduct')}>
+            Add Product
+          </button>
+
+        </div>
+      </nav> 
+        
+
       <div
         className="card p-4 col-md-8"
         style={{
@@ -117,7 +158,7 @@ const Signin = () => {
           </button>
         </form>
 
-        <p className="text-center mt-3" style={{ fontSize: "14px" }}>
+        <p className="text-center mt-3 text-light" style={{ fontSize: "14px" }}>
           New here?{" "}
           <Link to="/signup" style={{ color: "#00ffff" }}>
             Create Account
@@ -133,5 +174,12 @@ const inputStyle = {
   border: "1px solid rgba(0,255,255,0.3)",
   color: "#fff",
 };
+
+const navBtn = {
+  background: 'transparent',
+  border: '1px solid #e5e7eb',
+  color: "#00ffff"
+};
+
 
 export default Signin;

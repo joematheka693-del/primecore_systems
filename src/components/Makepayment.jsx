@@ -57,52 +57,121 @@ const Makepayment = () => {
       setError(error.message)
     }
   }
+
   return (
-    <div className='row justify-content-center'>
-      {/* <button className='btn btn-outline-primary'> Back to Product </button> */}
+    <div 
+      className='container-fluid d-flex justify-content-center align-items-center'
+      style={{
+        minHeight: "100vh",
+        background: "linear-gradient(135deg, #0f2027, #203a43, #2c5364)"
+      }}
+    >
+      
+      <div className="col-md-8">
 
-      <h1>Make Payment - Lipa Na M-PESA</h1>
+        {/* Back Button */}
+        <button 
+          className="btn mb-3"
+          style={{
+            background: "transparent",
+            border: "1px solid #00f2ff",
+            color: "#00f2ff",
+            boxShadow: "0 0 10px #00f2ff"
+          }}
+          onClick={() => navigate("/products")}>
+          ← Back
+        </button>
 
-        <div className="col-md-1">
-            <input type="button"
-            className="btn btn-primary"
-            value=" <- Back" 
-            onClick={() => navigate("/") }/>
+        <div 
+          className="card border-0 p-3"
+          style={{
+            background: "rgba(255,255,255,0.05)",
+            backdropFilter: "blur(10px)",
+            borderRadius: "20px",
+            boxShadow: "0 0 25px rgba(0, 255, 255, 0.2)"
+          }}
+        >
+
+          {/* Product Image */}
+          <img 
+            src={img_url + product.product_photo} 
+            alt="Product Name" 
+            style={{
+              width: "100%",
+              height: "220px",
+              objectFit: "cover",
+              borderRadius: "15px",
+              boxShadow: "0 0 15px rgba(0,255,255,0.3)"
+            }}
+          />
+
+          <div className="card-body text-light">
+
+            <h3 style={{ color: "#00f2ff" }}>
+              {product.product_name}
+            </h3>
+
+            <p style={{ color: "#ccc" }}>
+              {product.product_description}
+            </p>
+
+            <h4 style={{ color: "#00ff9f" }}>
+              KES {product.product_cost}
+            </h4>
+
+            <hr style={{ borderColor: "#00f2ff" }} />
+
+            <h5 className="text-center" style={{ color: "#00f2ff" }}>
+              💳 Lipa Na M-PESA
+            </h5>
+
+            <form onSubmit={hanldesubmit}>
+
+              {/* Bind the loading hook */}
+              {loading && <Loader />}
+
+              <p className="text-success text-center"> {success} </p>
+
+              <p className="text-danger text-center"> {error} </p>
+
+              <input 
+                type="number"
+                className='form-control mb-3'
+                placeholder='Enter Phone Number 254XXXXXXXX'
+                required
+                value={number}
+                onChange={(e) => setNumber(e.target.value)}
+                style={{
+                  background: "transparent",
+                  border: "1px solid #00f2ff",
+                  color: "#fff",
+                  boxShadow: "0 0 10px rgba(0,255,255,0.2)"
+                }}
+              />
+
+              {/* {number} */}
+
+              <div className="d-grid">
+                <input 
+                  type="submit"
+                  value="Make Payment"
+                  className='btn'
+                  style={{
+                    background: "linear-gradient(45deg, #00f2ff, #00ff9f)",
+                    border: "none",
+                    color: "#000",
+                    fontWeight: "bold",
+                    boxShadow: "0 0 15px #00f2ff",
+                    transition: "0.3s"
+                  }}
+                />
+              </div>
+
+            </form>
+
+          </div>
         </div>
 
-      <div className="col-md-8 card shadow p-4">
-        <img src={img_url + product.product_photo} alt="Product Name" className='product_img' />
-
-        <div className="card-body">
-          <h1 className="text-info"> {product.product_name} </h1>
-
-          <p className="text-dark"> {product.product_description} </p>
-
-          <b className="text-warning">KES {product.product_cost} </b> <br />
-
-          <form onSubmit={hanldesubmit}>
-
-            {/* Bind the loading hook */}
-            {loading && <Loader />}
-
-            <h3 className="text-success"> {success} </h3>
-
-             <h4 className="text-danger"> {error} </h4>
-            <input type="number"
-            className='form-control'
-            placeholder='Enter the Phone Number 254XXXXXXXX'
-            required
-            value={number}
-            onChange={(e) => setNumber(e.target.value)} /> <br />
-
-            {/* {number} */}
-
-            <input type="submit"
-            value="Make Payment"
-            className='btn btn-success' />
-
-          </form>
-        </div>
       </div>
     </div>
   )
