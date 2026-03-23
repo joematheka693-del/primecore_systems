@@ -7,3 +7,18 @@
 .anchor{
     text-decoration: none;
 }
+
+a:hover {
+  color: #575368 !important;
+  text-shadow: 0 0 10px #172324;
+}
+
+.signup{
+
+  background-image: url("/public/images/tech3.webp");
+
+  background-repeat: no-repeat;
+
+  background-size: cover;
+
+}

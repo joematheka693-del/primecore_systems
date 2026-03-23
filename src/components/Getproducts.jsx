@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import Loader from './Loader';
 import { useNavigate } from 'react-router-dom';
+import '../App.css'
 import '../css/card.css'
 
 const Getproducts = () => {

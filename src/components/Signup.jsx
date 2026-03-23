@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import '../App.css'
 
 const Signup = () => {
   const navigate = useNavigate(); // 👈 initialize navigate
@@ -54,12 +55,11 @@ const Signup = () => {
 
     
     <div
-      className="row justify-content-center align-items-center"
+      className="row justify-content-center align-items-center signup"
       style={{
         minHeight: "100vh",
-        background: "linear-gradient(135deg, #0f0f1a, #1a1a2e, #000000)",
         color: "#fff",
-      }}
+        }}
     >
 
       {/* NAVBAR */}
@@ -184,7 +184,7 @@ const Signup = () => {
             Access System
           </Link>
         </p>
-      </div>
+      </div> <br />
     </div>
   );
 };

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Loader from './Loader';
 import axios from 'axios';
+import '../App.css'
 
 const Addproducts = () => {
 
