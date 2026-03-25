@@ -58,6 +58,7 @@ const Signup = () => {
       className="row justify-content-center align-items-center signup"
       style={{
         minHeight: "100vh",
+        background: "linear-gradient(135deg, #0f0f1a, #1a1a2e, #000000)",
         color: "#fff",
         }}
     >
