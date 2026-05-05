@@ -1,10 +1,9 @@
-import axios from 'axios';
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import '../App.css'
+import axios from "axios";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import "../App.css";
 
 const Signin = () => {
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -30,20 +29,13 @@ const Signin = () => {
 
       setLoading("");
 
-      if (response.data.user) {
-        setSuccess("Access Granted. Redirecting...");
-
-        // Store user
+      if (response.data.message === "User Loggged In successfully") {
         localStorage.setItem("user", JSON.stringify(response.data.user));
-
-        // Redirect after short delay (better UX)
-        setTimeout(() => {
-          navigate("/");
-        }, 1500);
-      } else {
+        window.location.href = "/";
+      }
+      else {
         setError("Access Denied. Invalid credentials.");
       }
-
     } catch (err) {
       setLoading("");
       setError("System Error: Try again...");
@@ -51,135 +43,189 @@ const Signin = () => {
   };
 
   return (
-    
-    <div
-      className="row justify-content-center align-items-center"
-      style={{
-        minHeight: "100vh",
-        background: "linear-gradient(135deg, #0f0f1a, #1a1a2e, #000000)",
-        color: "#fff",
-      }}>
+    <div style={styles.page}>
 
-        {/* NAVBAR */}
-      <nav className="d-flex justify-content-between p-4">
-        <h3 style={{ color: '#ffffff', letterSpacing: '1px', }}>
-          <a href="/"
-          className='anchor'
-          style={{
-            color: "#00ffff"
-          }}>
-            PrimeCore Systems
-            </a>
-            </h3>
-        <div>
+      {/* CENTER AREA */}
+      <div style={styles.centerWrap}>
 
-          <button
-            className="btn m-2"
-            style={navBtn}
-            onClick={() => navigate('/signin')}>
-            Sign In
-          </button>
+        <div style={styles.card}>
 
-          <button
-            className="btn m-2"
-            style={navBtn}
-            onClick={() => navigate('/signup')}
-          >
-            Sign Up
-          </button>
+          <h2 style={styles.title}>Welcome Back</h2>
+          <p style={styles.subtitle}>Sign in to your PrimeCore dashboard</p>
 
-          <button
-            className="btn m-2"
-            style={navBtn}
-            onClick={() => navigate('/addproduct')}>
-            Add Product
-          </button>
+          {loading && <div style={styles.info}>{loading}</div>}
+          {success && <div style={styles.success}>{success}</div>}
+          {error && <div style={styles.error}>{error}</div>}
+
+          <form onSubmit={handlesubmit}>
+
+            <input
+              type="email"
+              placeholder="Email Address"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              style={styles.input}
+              required
+            />
+
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              style={styles.input}
+              required
+            />
+
+            <button type="submit" style={styles.button}>
+              Enter System
+            </button>
+          </form>
+
+          <p style={styles.footerText}>
+            New here?{" "}
+            <Link to="/signup" style={styles.link}>
+              Create account
+            </Link>
+          </p>
 
         </div>
-      </nav> 
-        
 
-      <div
-        className="card p-4 col-md-8"
-        style={{
-          background: "rgba(20, 20, 40, 0.9)",
-          borderRadius: "15px",
-          boxShadow: "0 0 25px rgba(0,255,255,0.2)",
-          border: "1px solid rgba(0,255,255,0.2)",
-        }}
-      >
-        <h2 className="text-center mb-3" style={{ color: "#00ffff" }}>
-          PrimeCore Systems
-        </h2>
-
-        <h5 className="text-center mb-4" style={{ color: "#aaa" }}>
-          Access Your Gaming Hub
-        </h5>
-
-        {loading && <div className="alert alert-info">{loading}</div>}
-
-        {success && <div className="alert alert-success">{success}</div>}
-
-        {error && <div className="alert alert-danger">{error}</div>}
-
-        <form onSubmit={handlesubmit}>
-          <input
-            type="email"
-            placeholder="Email Address"
-            className="form-control mb-3"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            style={inputStyle}
-          />
-
-          <input
-            type="password"
-            placeholder="Password"
-            className="form-control mb-3"
-            required
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            style={inputStyle}
-          />
-
-          <button
-            type="submit"
-            className="btn w-100"
-            style={{
-              background: "linear-gradient(90deg, #00ffff, #00ffcc)",
-              border: "none",
-              color: "#000",
-              fontWeight: "bold",
-              boxShadow: "0 0 10px #00ffff",
-            }}
-          >
-            Enter System
-          </button>
-        </form>
-
-        <p className="text-center mt-3 text-light" style={{ fontSize: "14px" }}>
-          New here?{" "}
-          <Link to="/signup" style={{ color: "#00ffff" }}>
-            Create Account
-          </Link>
-        </p>
       </div>
     </div>
   );
 };
 
-const inputStyle = {
-  background: "transparent",
-  border: "1px solid rgba(0,255,255,0.3)",
-  color: "#fff",
-};
+/* 🎨 STYLES */
+const styles = {
+  page: {
+    minHeight: "100vh",
+    background: "linear-gradient(180deg, #f8fafc, #eef2ff)",
+    fontFamily: "Inter, sans-serif",
+  },
 
-const navBtn = {
-  background: 'transparent',
-  border: '1px solid #e5e7eb',
-  color: "#00ffff"
-};
+  nav: {
+    display: "flex",
+    justifyContent: "space-between",
+    padding: "18px 40px",
+    background: "rgba(255,255,255,0.85)",
+    backdropFilter: "blur(12px)",
+    borderBottom: "1px solid #e2e8f0",
+    position: "sticky",
+    top: 0,
+  },
 
+  logo: {
+    textDecoration: "none",
+    fontWeight: "700",
+    color: "#2563eb",
+  },
+
+  navLinks: {
+    display: "flex",
+    gap: "10px",
+  },
+
+  navBtn: {
+    background: "transparent",
+    border: "1px solid #cbd5e1",
+    padding: "8px 12px",
+    borderRadius: "8px",
+    cursor: "pointer",
+  },
+
+  navBtnPrimary: {
+    background: "#2563eb",
+    color: "white",
+    border: "none",
+    padding: "8px 12px",
+    borderRadius: "8px",
+  },
+
+  centerWrap: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    height: "calc(100vh - 80px)",
+  },
+
+  card: {
+    width: "380px",
+    background: "white",
+    borderRadius: "18px",
+    padding: "30px",
+    boxShadow: "0 10px 30px rgba(0,0,0,0.08)",
+    border: "1px solid #e2e8f0",
+  },
+
+  title: {
+    textAlign: "center",
+    fontSize: "22px",
+    fontWeight: "800",
+    color: "#0f172a",
+  },
+
+  subtitle: {
+    textAlign: "center",
+    fontSize: "13px",
+    color: "#64748b",
+    marginBottom: "20px",
+  },
+
+  input: {
+    width: "100%",
+    padding: "12px",
+    marginBottom: "12px",
+    borderRadius: "10px",
+    border: "1px solid #cbd5e1",
+    outline: "none",
+  },
+
+  button: {
+    width: "100%",
+    padding: "12px",
+    borderRadius: "10px",
+    border: "none",
+    background: "linear-gradient(90deg, #2563eb, #1d4ed8)",
+    color: "white",
+    fontWeight: "700",
+    cursor: "pointer",
+    marginTop: "5px",
+  },
+
+  link: {
+    color: "#2563eb",
+    fontWeight: "600",
+    textDecoration: "none",
+  },
+
+  footerText: {
+    textAlign: "center",
+    marginTop: "15px",
+    fontSize: "13px",
+    color: "#64748b",
+  },
+
+  info: {
+    textAlign: "center",
+    color: "#2563eb",
+    fontSize: "13px",
+    marginBottom: "10px",
+  },
+
+  success: {
+    textAlign: "center",
+    color: "green",
+    fontSize: "13px",
+    marginBottom: "10px",
+  },
+
+  error: {
+    textAlign: "center",
+    color: "red",
+    fontSize: "13px",
+    marginBottom: "10px",
+  },
+};
 
 export default Signin;

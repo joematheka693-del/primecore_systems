@@ -1,10 +1,10 @@
-import axios from 'axios';
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import '../App.css'
+import axios from "axios";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import "../App.css";
 
 const Signup = () => {
-  const navigate = useNavigate(); // 👈 initialize navigate
+  const navigate = useNavigate();
 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -17,7 +17,7 @@ const Signup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading("Initializing PrimeCore Systems...");
+    setLoading("Creating your PrimeCore account...");
 
     try {
       const formdata = new FormData();
@@ -34,172 +34,222 @@ const Signup = () => {
       setLoading("");
       setSuccess(response.data.message);
 
-      // Clear inputs
       setUsername("");
       setEmail("");
       setPassword("");
       setPhone("");
 
-      // 👇 Redirect after short delay (optional for UX)
-      setTimeout(() => {
-        navigate("/"); // redirect to home page
-      }, 2000);
-
+      setTimeout(() => navigate("/signin"), 2000);
     } catch (err) {
       setLoading("");
-      setError("System Error: " + err.message);
+      setError(err.message || "Signup failed");
     }
   };
 
   return (
+    <div style={styles.page}>
 
-    
-    <div
-      className="row justify-content-center align-items-center signup"
-      style={{
-        minHeight: "100vh",
-        background: "linear-gradient(135deg, #0f0f1a, #1a1a2e, #000000)",
-        color: "#fff",
-        }}
-    >
+      {/* CARD */}
+      <div style={styles.wrapper}>
+        <div style={styles.card}>
+          <h2 style={styles.title}>Create Account</h2>
+          <p style={styles.subtitle}>Join the PrimeCore gaming ecosystem</p>
 
-      {/* NAVBAR */}
-      <nav className="d-flex justify-content-between p-4">
-        <h3 style={{ color: '#ffffff', letterSpacing: '1px', }}>
-          <a href="/"
-          className='anchor'
-          style={{
-            color: "#00ffff"
-          }}>
-            PrimeCore Systems
-            </a>
-            </h3>
-        <div>
+          {loading && <div style={styles.info}>{loading}</div>}
+          {success && <div style={styles.success}>{success}</div>}
+          {error && <div style={styles.error}>{error}</div>}
 
-          <button
-            className="btn m-2"
-            style={navBtn}
-            onClick={() => navigate('/signin')}>
-            Sign In
-          </button>
+          <form onSubmit={handleSubmit}>
+            <input
+              style={styles.input}
+              placeholder="Username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+            />
 
-          <button
-            className="btn m-2"
-            style={navBtn}
-            onClick={() => navigate('/signup')}
-          >
-            Sign Up
-          </button>
+            <input
+              style={styles.input}
+              placeholder="Email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
 
-          <button
-            className="btn m-2"
-            style={navBtn}
-            onClick={() => navigate('/addproduct')}>
-            Add Product
-          </button>
+            <input
+              style={styles.input}
+              placeholder="Password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
 
+            <input
+              style={styles.input}
+              placeholder="Phone Number"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              required
+            />
+
+            <button type="submit" style={styles.button}>
+              Initialize Account
+            </button>
+          </form>
+
+          <p style={styles.bottomText}>
+            Already have an account?{" "}
+            <Link to="/signin" style={styles.link}>
+              Sign In
+            </Link>
+          </p>
         </div>
-      </nav>
-
-      <div
-        className="card p-4 col-md-8"
-        style={{
-          background: "rgba(20, 20, 40, 0.9)",
-          borderRadius: "15px",
-          boxShadow: "0 0 25px rgba(0,255,255,0.2)",
-          border: "1px solid rgba(0,255,255,0.2)",
-        }}
-      >
-        <h2 className="text-center mb-3" style={{ color: "#00ffff" }}>
-          PrimeCore Systems
-        </h2>
-        <h5 className="text-center mb-4" style={{ color: "#aaa" }}>
-          Create Your Gaming Identity
-        </h5>
-
-        {loading && <div className="alert alert-info">{loading}</div>}
-
-        {success && <div className="alert alert-success">{success}</div>}
-
-        {error && <div className="alert alert-danger">{error}</div>}
-
-        <form onSubmit={handleSubmit}>
-          <input
-            type="text"
-            placeholder="Username"
-            className="form-control mb-3"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-            style={inputStyle}
-          />
-
-          <input
-            type="email"
-            placeholder="Email Address"
-            className="form-control mb-3"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            style={inputStyle}
-          />
-
-          <input
-            type="password"
-            placeholder="Password"
-            className="form-control mb-3"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            style={inputStyle}
-          />
-
-          <input
-            type="number"
-            placeholder="Phone Number"
-            className="form-control mb-3"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            required
-            style={inputStyle}
-          />
-
-          <button
-            type="submit"
-            className="btn w-100"
-            style={{
-              background: "linear-gradient(90deg, #00ffff, #00ffcc)",
-              border: "none",
-              color: "#000",
-              fontWeight: "bold",
-              boxShadow: "0 0 10px #00ffff",
-            }}
-          >
-            Initialize Account
-          </button>
-        </form>
-
-        <p className="text-center mt-3 text-light" style={{ fontSize: "14px" }}>
-          Already registered?{' '}
-          <Link to="/signin" style={{ color: "#00ffff" }}>
-            Access System
-          </Link>
-        </p>
-      </div> <br />
+      </div>
     </div>
   );
 };
 
-const inputStyle = {
-  background: "transparent",
-  border: "1px solid rgba(0,255,255,0.3)",
-  color: "#fff",
-};
+/* 🎨 STYLES */
+const styles = {
+  page: {
+    minHeight: "100vh",
+    background: "linear-gradient(180deg, #f8fafc, #eef2ff)",
+    fontFamily: "Inter, sans-serif",
+  },
 
-const navBtn = {
-  background: 'transparent',
-  border: '1px solid #e5e7eb',
-  color: "#00ffff"
+  nav: {
+    display: "flex",
+    justifyContent: "space-between",
+    padding: "18px 40px",
+    background: "rgba(255,255,255,0.8)",
+    backdropFilter: "blur(10px)",
+    borderBottom: "1px solid #e2e8f0",
+    position: "sticky",
+    top: 0,
+  },
+
+  logo: {
+    textDecoration: "none",
+    fontWeight: "800",
+    color: "#2563eb",
+    fontSize: "18px",
+  },
+
+  navLinks: {
+    display: "flex",
+    gap: "10px",
+  },
+
+  navBtn: {
+    background: "transparent",
+    border: "1px solid #cbd5e1",
+    padding: "8px 12px",
+    borderRadius: "8px",
+    cursor: "pointer",
+  },
+
+  navBtnActive: {
+    background: "#2563eb",
+    color: "white",
+    border: "none",
+    padding: "8px 12px",
+    borderRadius: "8px",
+    cursor: "pointer",
+  },
+
+  wrapper: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingTop: "60px",
+  },
+
+  card: {
+    width: "420px",
+    background: "white",
+    borderRadius: "16px",
+    padding: "30px",
+    boxShadow: "0 10px 30px rgba(0,0,0,0.08)",
+  },
+
+  title: {
+    textAlign: "center",
+    fontSize: "22px",
+    fontWeight: "800",
+    color: "#0f172a",
+  },
+
+  subtitle: {
+    textAlign: "center",
+    fontSize: "13px",
+    color: "#64748b",
+    marginBottom: "20px",
+  },
+
+  input: {
+    width: "100%",
+    padding: "12px",
+    marginBottom: "12px",
+    borderRadius: "10px",
+    border: "1px solid #cbd5e1",
+    outline: "none",
+  },
+
+  button: {
+    width: "100%",
+    padding: "12px",
+    background: "linear-gradient(90deg, #2563eb, #1d4ed8)",
+    border: "none",
+    color: "white",
+    borderRadius: "10px",
+    fontWeight: "700",
+    cursor: "pointer",
+    marginTop: "5px",
+  },
+
+  bottomText: {
+    textAlign: "center",
+    marginTop: "15px",
+    fontSize: "13px",
+  },
+
+  link: {
+    color: "#2563eb",
+    fontWeight: "600",
+    textDecoration: "none",
+  },
+
+  info: {
+    background: "#e0f2fe",
+    color: "#0369a1",
+    padding: "8px",
+    borderRadius: "8px",
+    fontSize: "13px",
+    marginBottom: "10px",
+    textAlign: "center",
+  },
+
+  success: {
+    background: "#dcfce7",
+    color: "#166534",
+    padding: "8px",
+    borderRadius: "8px",
+    fontSize: "13px",
+    marginBottom: "10px",
+    textAlign: "center",
+  },
+
+  error: {
+    background: "#fee2e2",
+    color: "#991b1b",
+    padding: "8px",
+    borderRadius: "8px",
+    fontSize: "13px",
+    marginBottom: "10px",
+    textAlign: "center",
+  },
 };
 
 export default Signup;
