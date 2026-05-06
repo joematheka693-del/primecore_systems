@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../App.css";
 
+const API_BASE_URL = "https://frostyghost23.alwaysdata.net/api";
+
 const Signup = () => {
   const navigate = useNavigate();
 
@@ -17,17 +19,21 @@ const Signup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     setLoading("Creating your PrimeCore account...");
+    setSuccess("");
+    setError("");
 
     try {
       const formdata = new FormData();
-      formdata.append("username", username);
-      formdata.append("email", email);
+
+      formdata.append("username", username.trim());
+      formdata.append("email", email.trim());
       formdata.append("password", password);
-      formdata.append("phone", phone);
+      formdata.append("phone", phone.trim());
 
       const response = await axios.post(
-        "http://frostyghost23.alwaysdata.net/api/signup",
+        `${API_BASE_URL}/signup`,
         formdata
       );
 
@@ -39,24 +45,36 @@ const Signup = () => {
       setPassword("");
       setPhone("");
 
-      setTimeout(() => navigate("/signin"), 2000);
+      setTimeout(() => {
+        navigate("/signin");
+      }, 1500);
     } catch (err) {
+      console.error(err);
+
       setLoading("");
-      setError(err.message || "Signup failed");
+
+      if (err.response?.data?.message) {
+        setError(err.response.data.message);
+      } else {
+        setError("Signup failed. Please try again.");
+      }
     }
   };
 
   return (
     <div style={styles.page}>
-
-      {/* CARD */}
       <div style={styles.wrapper}>
         <div style={styles.card}>
           <h2 style={styles.title}>Create Account</h2>
-          <p style={styles.subtitle}>Join the PrimeCore gaming ecosystem</p>
+
+          <p style={styles.subtitle}>
+            Join the PrimeCore gaming ecosystem
+          </p>
 
           {loading && <div style={styles.info}>{loading}</div>}
+
           {success && <div style={styles.success}>{success}</div>}
+
           {error && <div style={styles.error}>{error}</div>}
 
           <form onSubmit={handleSubmit}>
@@ -94,8 +112,12 @@ const Signup = () => {
               required
             />
 
-            <button type="submit" style={styles.button}>
-              Initialize Account
+            <button
+              type="submit"
+              style={styles.button}
+              disabled={loading}
+            >
+              {loading ? "Creating..." : "Initialize Account"}
             </button>
           </form>
 
@@ -111,7 +133,6 @@ const Signup = () => {
   );
 };
 
-/* 🎨 STYLES */
 const styles = {
   page: {
     minHeight: "100vh",
@@ -119,55 +140,17 @@ const styles = {
     fontFamily: "Inter, sans-serif",
   },
 
-  nav: {
-    display: "flex",
-    justifyContent: "space-between",
-    padding: "18px 40px",
-    background: "rgba(255,255,255,0.8)",
-    backdropFilter: "blur(10px)",
-    borderBottom: "1px solid #e2e8f0",
-    position: "sticky",
-    top: 0,
-  },
-
-  logo: {
-    textDecoration: "none",
-    fontWeight: "800",
-    color: "#2563eb",
-    fontSize: "18px",
-  },
-
-  navLinks: {
-    display: "flex",
-    gap: "10px",
-  },
-
-  navBtn: {
-    background: "transparent",
-    border: "1px solid #cbd5e1",
-    padding: "8px 12px",
-    borderRadius: "8px",
-    cursor: "pointer",
-  },
-
-  navBtnActive: {
-    background: "#2563eb",
-    color: "white",
-    border: "none",
-    padding: "8px 12px",
-    borderRadius: "8px",
-    cursor: "pointer",
-  },
-
   wrapper: {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    paddingTop: "60px",
+    minHeight: "100vh",
+    padding: "20px",
   },
 
   card: {
-    width: "420px",
+    width: "100%",
+    maxWidth: "420px",
     background: "white",
     borderRadius: "16px",
     padding: "30px",
@@ -195,6 +178,7 @@ const styles = {
     borderRadius: "10px",
     border: "1px solid #cbd5e1",
     outline: "none",
+    boxSizing: "border-box",
   },
 
   button: {
