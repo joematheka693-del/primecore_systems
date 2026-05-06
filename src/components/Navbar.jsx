@@ -46,6 +46,13 @@ const Navbar = () => {
           🛒 Cart
         </button>
 
+        <button
+          style={styles.navBtn}
+          onClick={() => navigate("/gaming-setups")}
+        >
+          Gaming Setups
+        </button>
+
         {!user && (
           <>
             <button style={styles.navBtn} onClick={() => navigate("/signin")}>
@@ -112,6 +119,17 @@ const Navbar = () => {
                   </button>
                 )}
 
+                <button
+                  style={styles.dropdownItem}
+                  onClick={() => navigate("/about")}
+                >
+                  About Us
+                </button>
+
+                <button style={styles.dropdownItem} onClick={() => navigate("/contact")}>
+                  Contact Us
+                </button>
+
                 <button style={styles.logoutBtn} onClick={logout}>
                   Logout
                 </button>
@@ -130,9 +148,9 @@ const styles = {
     justifyContent: "space-between",
     alignItems: "center",
     padding: "18px 40px",
-    background: "rgba(255,255,255,0.88)",
+    background: "rgba(15,23,42,0.75)",
     backdropFilter: "blur(14px)",
-    borderBottom: "1px solid #e2e8f0",
+    borderBottom: "1px solid rgba(255,255,255,0.08)",
     position: "sticky",
     top: 0,
     zIndex: 1000,

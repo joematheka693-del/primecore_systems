@@ -20,6 +20,23 @@ const Home = () => {
         </button>
       </section>
 
+
+      <div
+        style={styles.featureCard}
+        onClick={() => navigate("/gaming-setups")}
+      >
+        <h2>🎮 Gaming Setups</h2>
+
+        <p>
+          Explore RGB battlestations, premium rigs,
+          accessories, and elite desk setups.
+        </p>
+
+        <button style={styles.featureBtn}>
+          Explore Setups →
+        </button>
+      </div>
+
       {/* FEATURES */}
       <section style={styles.section}>
         <h2 style={styles.sectionTitle}>What We Offer</h2>
@@ -183,7 +200,38 @@ const styles = {
     border: 'none',
     padding: '12px 22px',
     borderRadius: '12px'
-  }
+  },
+
+featureGrid: {
+  display: "grid",
+  gridTemplateColumns: "repeat(auto-fit,minmax(320px,1fr))",
+  gap: "20px",
+  padding: "40px 25px",
+  maxWidth: "1200px",
+  margin: "auto",
+},
+
+featureCard: {
+  background:
+    "linear-gradient(135deg, rgba(37,99,235,0.15), rgba(15,23,42,0.95))",
+  border: "1px solid rgba(148,163,184,0.15)",
+  borderRadius: "24px",
+  padding: "30px",
+  cursor: "pointer",
+  boxShadow: "0 25px 70px rgba(0,0,0,0.35)",
+  transition: "0.3s",
+},
+
+featureBtn: {
+  marginTop: "18px",
+  border: "none",
+  padding: "12px 18px",
+  borderRadius: "12px",
+  background: "linear-gradient(135deg,#2563eb,#38bdf8)",
+  color: "white",
+  fontWeight: "900",
+  cursor: "pointer",
+},
 };
 
 export default Home;

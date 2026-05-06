@@ -118,6 +118,14 @@ const AdminDashboard = () => {
           <button style={styles.addBtn} onClick={() => navigate("/admin/quotes")}>
             Service Quotes
           </button>
+
+          <button style={styles.addBtn} onClick={() => navigate("/admin/analytics")}>
+            Analytics
+          </button>
+
+          <button style={styles.addBtn} onClick={() => navigate("/admin/contacts")}>
+            Contact Messages
+          </button>
         </div>
       </section>
 
@@ -126,7 +134,7 @@ const AdminDashboard = () => {
           style={category === "all" ? styles.activeCat : styles.catBtn}
           onClick={() => setCategory("all")}
         >
-          All
+          All Inventory
         </button>
 
         <button
@@ -144,17 +152,10 @@ const AdminDashboard = () => {
         </button>
 
         <button
-          style={category === "repairs" ? styles.activeCat : styles.catBtn}
-          onClick={() => setCategory("repairs")}
+          style={category === "offers" ? styles.activeCat : styles.catBtn}
+          onClick={() => setCategory("offers")}
         >
-          Repairs
-        </button>
-
-        <button
-          style={category === "services" ? styles.activeCat : styles.catBtn}
-          onClick={() => setCategory("services")}
-        >
-          Services
+          Offers
         </button>
       </section>
 

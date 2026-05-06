@@ -1,35 +1,38 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, useRef } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { CartContext } from "../context/CartContext";
 import Loader from "./Loader";
 import ProductModal from "./ProductModal";
-import "../App.css";
 
 const GamingSetups = () => {
   const [setups, setSetups] = useState([]);
-  const [filtered, setFiltered] = useState([]);
-  const [search, setSearch] = useState("");
-  const [category, setCategory] = useState("all");
   const [loading, setLoading] = useState(false);
   const [selected, setSelected] = useState(null);
 
-  const { addToCart, cart } = useContext(CartContext);
   const navigate = useNavigate();
+
+  const { addToCart, cart } = useContext(CartContext);
 
   const img_url = "https://frostyghost23.alwaysdata.net/static/images/";
 
-  // 🔥 FETCH SETUPS (you can later connect real API)
+  const cartCount = cart.reduce(
+    (sum, item) => sum + (item.quantity || 1),
+    0
+  );
+
   const fetchSetups = async () => {
-    setLoading(true);
     try {
-      const res = await axios.get(
-        "http://frostyghost23.alwaysdata.net/api/get_products"
+      setLoading(true);
+
+      const response = await axios.get(
+        "https://frostyghost23.alwaysdata.net/api/get_products"
       );
-      setSetups(res.data);
-      setFiltered(res.data);
+
+      setSetups(response.data);
     } catch (err) {
-      console.log(err.message);
+      console.log(err);
+      alert("Failed to load setups");
     } finally {
       setLoading(false);
     }
@@ -39,72 +42,187 @@ const GamingSetups = () => {
     fetchSetups();
   }, []);
 
-  // 🔍 SEARCH + FILTER + CATEGORY
-  useEffect(() => {
-    let data = [...setups];
+  const rgbSetups = setups.filter((p) =>
+    `${p.product_name} ${p.product_description}`
+      .toLowerCase()
+      .includes("rgb")
+  );
 
-    if (search) {
-      data = data.filter((p) =>
-        p.product_name.toLowerCase().includes(search.toLowerCase())
-      );
-    }
+  const deskSetups = setups.filter((p) =>
+    `${p.product_name} ${p.product_description}`
+      .toLowerCase()
+      .includes("desk")
+  );
 
-    if (category !== "all") {
-      data = data.filter((p) => p.category === category);
-    }
+  const premiumSetups = setups.filter(
+    (p) => Number(p.product_cost) > 100000
+  );
 
-    setFiltered(data);
-  }, [search, category, setups]);
+  const accessories = setups.filter(
+    (p) => p.category === "accessories"
+  );
+
+  const budgetBuilds = setups.filter(
+    (p) => Number(p.product_cost) < 80000
+  );
 
   return (
     <div style={styles.page}>
-
       {/* HERO */}
-      <div style={styles.hero}>
-        <h1>Gaming Setups Marketplace</h1>
-        <p>RGB builds • Desks • Accessories • Full Gaming Stations</p>
+      <section style={styles.hero}>
+        <div style={styles.overlay} />
 
-        <input
-          placeholder="Search setups..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          style={styles.search}
+        <div style={styles.heroContent}>
+          <p style={styles.badge}>PrimeCore Marketplace</p>
+
+          <h1 style={styles.heroTitle}>
+            Elite Gaming Setup Showcase
+          </h1>
+
+          <p style={styles.heroSubtitle}>
+            Discover RGB battlestations, premium gaming rigs,
+            minimal desk setups, and next-generation accessories.
+          </p>
+
+          <div style={styles.heroButtons}>
+            <button
+              style={styles.primaryBtn}
+              onClick={() => navigate("/products")}
+            >
+              Browse Products
+            </button>
+
+            <button
+              style={styles.secondaryBtn}
+              onClick={() => navigate("/cart")}
+            >
+              🛒 Cart ({cartCount})
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {loading && <Loader />}
+
+      {!loading && (
+        <>
+          <SetupRow
+            title="🔥 Featured RGB Setups"
+            subtitle="Immersive RGB battlestations with synchronized lighting."
+            products={rgbSetups}
+            img_url={img_url}
+            addToCart={addToCart}
+            setSelected={setSelected}
+            navigate={navigate}
+          />
+
+          <SetupRow
+            title="🎮 Ultimate Gaming Rigs"
+            subtitle="High-end builds engineered for elite performance."
+            products={premiumSetups}
+            img_url={img_url}
+            addToCart={addToCart}
+            setSelected={setSelected}
+            navigate={navigate}
+          />
+
+          <SetupRow
+            title="🖥️ Minimal Desk Setups"
+            subtitle="Clean productivity and aesthetic-focused workspaces."
+            products={deskSetups}
+            img_url={img_url}
+            addToCart={addToCart}
+            setSelected={setSelected}
+            navigate={navigate}
+          />
+
+          <SetupRow
+            title="⚡ Budget Builds"
+            subtitle="Affordable setups without sacrificing performance."
+            products={budgetBuilds}
+            img_url={img_url}
+            addToCart={addToCart}
+            setSelected={setSelected}
+            navigate={navigate}
+          />
+
+          <SetupRow
+            title="💎 Accessories & Peripherals"
+            subtitle="RGB gear, keyboards, mice, headsets, and setup essentials."
+            products={accessories}
+            img_url={img_url}
+            addToCart={addToCart}
+            setSelected={setSelected}
+            navigate={navigate}
+          />
+        </>
+      )}
+
+      {selected && (
+        <ProductModal
+          product={selected}
+          img_url={img_url}
+          onClose={() => setSelected(null)}
+          navigate={navigate}
         />
+      )}
+    </div>
+  );
+};
 
-        <div style={styles.categories}>
-          {["all", "RGB Setup", "Desk Setup", "Full Rig", "Accessories"].map(
-            (cat) => (
-              <button
-                key={cat}
-                onClick={() => setCategory(cat)}
-                style={{
-                  ...styles.catBtn,
-                  background: category === cat ? "#2563eb" : "white",
-                  color: category === cat ? "white" : "#2563eb",
-                }}
-              >
-                {cat}
-              </button>
-            )
-          )}
+const SetupRow = ({
+  title,
+  subtitle,
+  products,
+  img_url,
+  addToCart,
+  setSelected,
+  navigate,
+}) => {
+  const rowRef = useRef();
+
+  const scroll = (direction) => {
+    if (!rowRef.current) return;
+
+    rowRef.current.scrollBy({
+      left: direction === "left" ? -420 : 420,
+      behavior: "smooth",
+    });
+  };
+
+  if (products.length === 0) return null;
+
+  return (
+    <section style={styles.section}>
+      <div style={styles.sectionHeader}>
+        <div>
+          <h2 style={styles.sectionTitle}>{title}</h2>
+          <p style={styles.sectionSubtitle}>{subtitle}</p>
+        </div>
+
+        <div style={styles.arrows}>
+          <button
+            style={styles.arrowBtn}
+            onClick={() => scroll("left")}
+          >
+            ←
+          </button>
+
+          <button
+            style={styles.arrowBtn}
+            onClick={() => scroll("right")}
+          >
+            →
+          </button>
         </div>
       </div>
 
-      {/* LOADING */}
-      {loading && <Loader />}
-
-      {/* STATS BAR */}
-      <div style={styles.stats}>
-        <span>🛒 Cart Items: {cart.length}</span>
-        <span>🔥 Live Marketplace</span>
-      </div>
-
-      {/* GRID */}
-      <div style={styles.grid}>
-        {filtered.map((item) => (
-          <div key={item.id} style={styles.card}>
-
-            {/* ADD BUTTON (+) */}
+      <div style={styles.row} ref={rowRef}>
+        {products.map((item) => (
+          <div
+            key={item.product_id || item.id}
+            style={styles.card}
+          >
             <button
               style={styles.plusBtn}
               onClick={() => addToCart(item)}
@@ -114,183 +232,313 @@ const GamingSetups = () => {
 
             <img
               src={img_url + item.product_photo}
+              alt={item.product_name}
               style={styles.image}
-              alt=""
             />
 
-            <div style={styles.content}>
-              <h3>{item.product_name}</h3>
+            <div style={styles.cardContent}>
+              <span style={styles.category}>
+                {item.category || "setup"}
+              </span>
+
+              <h3 style={styles.productTitle}>
+                {item.product_name}
+              </h3>
 
               <p style={styles.desc}>
-                {item.product_description?.slice(0, 80)}...
+                {item.product_description?.slice(0, 85)}...
               </p>
 
-              <div style={styles.price}>
-                KES {item.product_cost}
-              </div>
+              <div style={styles.footer}>
+                <strong style={styles.price}>
+                  KES {Number(item.product_cost).toLocaleString()}
+                </strong>
 
-              <div style={styles.actions}>
+                <div style={styles.buttons}>
+                  <button
+                    style={styles.viewBtn}
+                    onClick={() =>
+                      navigate(`/gaming-setup/${item.product_id || item.id}`)
+                    }
+                  >
+                    View
+                  </button>
 
-                <button
-                  style={styles.viewBtn}
-                  onClick={() => setSelected(item)}
-                >
-                  View
-                </button>
-
-                <button
-                  style={styles.buyBtn}
-                  onClick={() =>
-                    navigate("/makepayment", {
-                      state: { product: item, type: "buyNow" },
-                    })
-                  }
-                >
-                  Buy Now
-                </button>
-
+                  <button
+                    style={styles.buyBtn}
+                    onClick={() =>
+                      navigate("/makepayment", {
+                        state: { product: item },
+                      })
+                    }
+                  >
+                    Buy
+                  </button>
+                </div>
               </div>
             </div>
           </div>
         ))}
       </div>
-
-      {/* MODAL */}
-      {selected && (
-        <ProductModal
-          product={selected}
-          img_url={img_url}
-          onClose={() => setSelected(null)}
-          addToCart={addToCart}
-          navigate={navigate}
-        />
-      )}
-    </div>
+    </section>
   );
 };
 
-/* 🎨 STYLES */
 const styles = {
   page: {
     minHeight: "100vh",
-    background: "#0b1220",
+    background:
+      "linear-gradient(180deg,#020617,#0f172a,#111827)",
     color: "white",
-    fontFamily: "Arial",
-    paddingBottom: "50px",
+    fontFamily: "Inter, sans-serif",
+    overflowX: "hidden",
   },
 
   hero: {
+    position: "relative",
+    minHeight: "75vh",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: "40px",
     textAlign: "center",
-    padding: "40px 20px",
-    background: "linear-gradient(135deg,#0f172a,#1e293b)",
+    background:
+      "radial-gradient(circle at top, rgba(37,99,235,0.35), transparent 40%)",
   },
 
-  search: {
-    padding: "10px",
-    width: "250px",
-    borderRadius: "10px",
-    border: "none",
-    marginTop: "10px",
+  overlay: {
+    position: "absolute",
+    inset: 0,
+    background:
+      "linear-gradient(to bottom, rgba(2,6,23,0.2), rgba(2,6,23,0.9))",
   },
 
-  categories: {
-    marginTop: "15px",
+  heroContent: {
+    position: "relative",
+    zIndex: 2,
+    maxWidth: "850px",
+  },
+
+  badge: {
+    display: "inline-block",
+    padding: "8px 16px",
+    borderRadius: "999px",
+    background: "rgba(37,99,235,0.15)",
+    color: "#93c5fd",
+    fontWeight: "900",
+    marginBottom: "20px",
+  },
+
+  heroTitle: {
+    fontSize: "64px",
+    lineHeight: "1",
+    marginBottom: "20px",
+    fontWeight: "950",
+    letterSpacing: "-2px",
+  },
+
+  heroSubtitle: {
+    color: "#94a3b8",
+    fontSize: "18px",
+    lineHeight: "1.7",
+    marginBottom: "30px",
+  },
+
+  heroButtons: {
     display: "flex",
     justifyContent: "center",
-    gap: "10px",
+    gap: "15px",
     flexWrap: "wrap",
   },
 
-  catBtn: {
-    padding: "8px 12px",
-    borderRadius: "20px",
-    border: "1px solid #2563eb",
+  primaryBtn: {
+    border: "none",
+    padding: "14px 20px",
+    borderRadius: "14px",
+    background: "linear-gradient(135deg,#2563eb,#38bdf8)",
+    color: "white",
+    fontWeight: "900",
     cursor: "pointer",
   },
 
-  stats: {
+  secondaryBtn: {
+    border: "1px solid rgba(255,255,255,0.2)",
+    padding: "14px 20px",
+    borderRadius: "14px",
+    background: "rgba(255,255,255,0.06)",
+    color: "white",
+    fontWeight: "900",
+    cursor: "pointer",
+  },
+
+  section: {
+    padding: "20px 0 35px",
+  },
+
+  sectionHeader: {
     display: "flex",
     justifyContent: "space-between",
-    padding: "10px 30px",
+    alignItems: "center",
+    padding: "0 28px 18px",
+    gap: "20px",
+  },
+
+  sectionTitle: {
+    fontSize: "28px",
+    marginBottom: "6px",
+    fontWeight: "950",
+  },
+
+  sectionSubtitle: {
     color: "#94a3b8",
   },
 
-  grid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fill,minmax(260px,1fr))",
+  arrows: {
+    display: "flex",
+    gap: "10px",
+  },
+
+  arrowBtn: {
+    width: "42px",
+    height: "42px",
+    borderRadius: "50%",
+    border: "none",
+    background: "rgba(255,255,255,0.08)",
+    color: "white",
+    cursor: "pointer",
+    fontSize: "18px",
+  },
+
+  row: {
+    display: "flex",
     gap: "20px",
-    padding: "20px",
-    maxWidth: "1200px",
-    margin: "auto",
+    overflowX: "auto",
+    padding: "10px 28px",
+    scrollBehavior: "smooth",
   },
 
   card: {
-    background: "#111827",
-    borderRadius: "15px",
+    minWidth: "320px",
+    maxWidth: "320px",
+    background: "rgba(17,24,39,0.95)",
+    borderRadius: "24px",
     overflow: "hidden",
     position: "relative",
+    border: "1px solid rgba(148,163,184,0.15)",
+    boxShadow: "0 25px 70px rgba(0,0,0,0.4)",
+    flexShrink: 0,
+
+    display: "flex",
+    flexDirection: "column",
+
+    transition: "0.3s ease",
   },
 
   plusBtn: {
     position: "absolute",
-    top: "10px",
-    right: "10px",
-    width: "32px",
-    height: "32px",
+    top: "12px",
+    right: "12px",
+    width: "38px",
+    height: "38px",
     borderRadius: "50%",
     border: "none",
-    background: "#2563eb",
+    background: "linear-gradient(135deg,#2563eb,#38bdf8)",
     color: "white",
-    fontSize: "20px",
+    fontWeight: "900",
+    fontSize: "22px",
     cursor: "pointer",
+    zIndex: 2,
   },
 
   image: {
     width: "100%",
-    height: "200px",
+    height: "240px",
     objectFit: "cover",
+    flexShrink: 0,
   },
 
-  content: {
-    padding: "12px",
+  cardContent: {
+    padding: "18px",
+    display: "flex",
+    flexDirection: "column",
+    flex: 1,
+    minHeight: "220px",
+  },
+
+  category: {
+    display: "inline-block",
+    padding: "6px 10px",
+    borderRadius: "999px",
+    background: "rgba(37,99,235,0.15)",
+    color: "#93c5fd",
+    fontSize: "12px",
+    fontWeight: "900",
+    textTransform: "capitalize",
+  },
+
+  productTitle: {
+    marginTop: "12px",
+    marginBottom: "10px",
+    fontWeight: "950",
+    lineHeight: "1.3",
+
+    display: "-webkit-box",
+    WebkitLineClamp: 2,
+    WebkitBoxOrient: "vertical",
+    overflow: "hidden",
+
+    minHeight: "54px",
   },
 
   desc: {
-    fontSize: "13px",
     color: "#94a3b8",
+    fontSize: "13px",
+    lineHeight: "1.7",
+
+    display: "-webkit-box",
+    WebkitLineClamp: 3,
+    WebkitBoxOrient: "vertical",
+    overflow: "hidden",
+
+    minHeight: "68px",
+  },
+
+  footer: {
+    marginTop: "auto",
+    paddingTop: "18px",
   },
 
   price: {
-    marginTop: "10px",
-    fontWeight: "bold",
     color: "#38bdf8",
+    fontSize: "17px",
   },
 
-  actions: {
+  buttons: {
     display: "flex",
-    justifyContent: "space-between",
-    marginTop: "10px",
+    gap: "10px",
+    marginTop: "14px",
   },
 
   viewBtn: {
     flex: 1,
-    marginRight: "5px",
-    padding: "8px",
-    borderRadius: "8px",
-    border: "1px solid #2563eb",
+    padding: "10px",
+    borderRadius: "12px",
+    border: "1px solid rgba(147,197,253,0.25)",
     background: "transparent",
     color: "white",
     cursor: "pointer",
+    fontWeight: "900",
   },
 
   buyBtn: {
     flex: 1,
-    padding: "8px",
-    borderRadius: "8px",
+    padding: "10px",
+    borderRadius: "12px",
     border: "none",
-    background: "#2563eb",
+    background: "linear-gradient(135deg,#2563eb,#0f172a)",
     color: "white",
     cursor: "pointer",
+    fontWeight: "900",
   },
 };
 

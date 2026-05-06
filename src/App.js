@@ -17,7 +17,13 @@ import Orders from "./components/Orders";
 import AdminOrders from "./components/AdminOrders";
 import AdminRepairs from "./components/AdminRepairs";
 import AdminQuotes from "./components/AdminQuotes";
+import AdminAnalytics from "./components/AdminAnalytics";
 import Profile from "./components/Profile";
+import SetupDetails from "./components/SetupDetails";
+import About from "./components/About";
+import ChatBot from "./components/ChatBot";
+import Contact from "./components/Contact";
+import AdminContacts from "./components/AdminContacts";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -50,6 +56,14 @@ function App() {
               <Route path="/services" element={<Services />} />
               <Route path="/offers" element={<Offers />} />
               <Route path="/profile" element={<Profile />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/contact" element={<Contact />} />
+
+              <Route
+                path="/gaming-setup/:id"
+                element={<SetupDetails />}
+              />
+
               <Route path="/admin" element={
                   <AdminRoute>
                     <AdminDashboard />
@@ -93,11 +107,32 @@ function App() {
                 }
               />
 
+              <Route
+                path="/admin/analytics"
+                element={
+                  <AdminRoute>
+                    <AdminAnalytics />
+                  </AdminRoute>
+                }
+              />
+
+              <Route
+                path="/admin/contacts"
+                element={
+                  <AdminRoute>
+                    <AdminContacts />
+                  </AdminRoute>
+                }
+              />
+
               <Route path="/makepayment" element={<Makepayment />} />
               <Route path="/orders" element={<Orders />} />
               <Route path='/cart' element={<Cart />} />
+              <Route path="/gaming-setups" element={<GamingSetups />} />
               <Route path='*' element={<Notfound />} />
             </Routes>
+
+            <ChatBot />
           </CartProvider>
         </div>
 

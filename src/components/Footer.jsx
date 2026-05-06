@@ -1,10 +1,13 @@
 import { FaFacebook, FaTwitter, FaInstagram, FaGithub } from "react-icons/fa";
 import "../App.css";
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 
 const Footer = () => {
+
+  const navigate = useNavigate();
 
 const [email, setEmail] = useState("");
 const [message, setMessage] = useState("");
@@ -48,9 +51,10 @@ React.useEffect(() => {
 
         {/* BRAND */}
         <div>
-          <h3 style={styles.brand}>PrimeCore Systems</h3>
-          <p style={styles.text}>
-            Building elite gaming PCs, setups, and immersive digital experiences.
+          <h3>PrimeCore Systems</h3>
+          <p>
+          Elite gaming setups, custom PCs, accessories,
+          repairs, and next-gen tech solutions.
           </p>
 
           <div style={styles.socials}>
@@ -71,7 +75,12 @@ React.useEffect(() => {
 
         <div>
           <h4>Company</h4>
-          <p>About</p>
+          <p
+            style={styles.link}
+            onClick={() => navigate("/about")}
+          >
+            About Us
+          </p>
           <p>Careers</p>
           <p>Contact</p>
         </div>

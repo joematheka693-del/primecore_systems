@@ -203,9 +203,8 @@ const Addproducts = () => {
                 >
                   <option value="pcs">Gaming PCs</option>
                   <option value="accessories">Accessories</option>
-                  <option value="repairs">Repairs</option>
-                  <option value="services">Services</option>
                   <option value="offers">Offers</option>
+                  <option value="setups">Gaming Setups</option>
                 </select>
               </div>
             </div>
