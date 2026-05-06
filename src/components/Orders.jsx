@@ -11,6 +11,9 @@ const Orders = () => {
   const [loading, setLoading] = useState(false);
 
   const fetchOrders = async () => {
+
+    if (!user) return;
+
     try {
       setLoading(true);
 
@@ -23,9 +26,11 @@ const Orders = () => {
       );
 
       setOrders(myOrders);
+
     } catch (error) {
       console.log(error);
       alert("Failed to load orders");
+
     } finally {
       setLoading(false);
     }
@@ -33,7 +38,7 @@ const Orders = () => {
 
   useEffect(() => {
     fetchOrders();
-  }, [user]);
+  }, []);
 
   const parseItems = (items) => {
     if (!items) return [];
