@@ -56,7 +56,7 @@ const Navbar = () => {
           style={styles.navBtn}
           onClick={() => navigate("/cart")}
         >
-          🛒 Cart ({cartCount})
+          🛒 Cart
         </button>
 
         <button
