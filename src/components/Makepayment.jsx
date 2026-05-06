@@ -1,6 +1,7 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { CartContext } from "../context/CartContext";
 import "../App.css";
 import Loader from "./Loader";
 
@@ -20,6 +21,7 @@ const Makepayment = () => {
   const [error, setError] = useState("");
 
   const user = JSON.parse(localStorage.getItem("user"));
+  const { clearCart } = useContext(CartContext);
 
   const amount =
   type === "cart"
@@ -27,7 +29,7 @@ const Makepayment = () => {
         (sum, item) => sum + Number(item.product_cost) * (item.quantity || 1),
         0
       )
-    : Number(product?.product_cost || 0);
+    : Number(product?.product_cost ?? 0);
 
   const isValidPhone = (phone) => /^254\d{9}$/.test(phone);
 
@@ -57,14 +59,14 @@ const Makepayment = () => {
       const orderItems =
         type === "cart"
           ? cart.map((item) => ({
-              id: item.id,
+              id: item.product_id || item.id,
               name: item.product_name,
               price: item.product_cost,
               quantity: item.quantity || 1,
             }))
           : [
               {
-                id: product.id,
+                id: product.product_id || product.id,
                 name: product.product_name,
                 price: product.product_cost,
                 quantity: 1,
@@ -88,6 +90,9 @@ const Makepayment = () => {
       setTimeout(() => {
         setLoading(false);
         setStatusMessage(response.data.message || "✅ Payment request sent!");
+        if (type === "cart") {
+          clearCart();
+        }
         navigate("/orders");
       }, 2500);
 
@@ -129,7 +134,7 @@ const Makepayment = () => {
               {cart.map((item) => (
                 <div key={item.id} style={styles.cartItem}>
                   <img
-                    src={img_url + item.product_photo}
+                    src={`${img_url}${item.product_photo}`}
                     alt={item.product_name}
                     style={styles.cartImg}
                   />
@@ -154,7 +159,7 @@ const Makepayment = () => {
             <>
               <div style={styles.imageBox}>
                 <img
-                  src={img_url + product.product_photo}
+                  src={`${img_url}${product.product_photo}`}
                   alt={product.product_name}
                   style={styles.image}
                 />
@@ -189,6 +194,7 @@ const Makepayment = () => {
               value={number}
               onChange={(e) => setNumber(e.target.value)}
               style={styles.input}
+              required
             />
 
             <button
