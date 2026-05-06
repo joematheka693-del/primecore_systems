@@ -1,9 +1,16 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 
 export const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
-  const [cart, setCart] = useState([]);
+  const [cart, setCart] = useState(() => {
+    const savedCart = localStorage.getItem("primecore_cart");
+    return savedCart ? JSON.parse(savedCart) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem("primecore_cart", JSON.stringify(cart));
+  }, [cart]);
 
   const getProductKey = (product) => {
     return product?.product_id || product?.id || product?._id;
@@ -35,7 +42,9 @@ export const CartProvider = ({ children }) => {
   const removeFromCart = (product) => {
     const key = getProductKey(product);
 
-    setCart((prev) => prev.filter((item) => getProductKey(item) !== key));
+    setCart((prev) =>
+      prev.filter((item) => getProductKey(item) !== key)
+    );
   };
 
   const increaseQty = (product) => {
@@ -54,16 +63,21 @@ export const CartProvider = ({ children }) => {
     const key = getProductKey(product);
 
     setCart((prev) =>
-      prev
-        .map((item) =>
-          getProductKey(item) === key
-            ? { ...item, quantity: Math.max((item.quantity || 1) - 1, 1) }
-            : item
-        )
+      prev.map((item) =>
+        getProductKey(item) === key
+          ? {
+              ...item,
+              quantity: Math.max((item.quantity || 1) - 1, 1),
+            }
+          : item
+      )
     );
   };
 
-  const clearCart = () => setCart([]);
+  const clearCart = () => {
+    setCart([]);
+    localStorage.removeItem("primecore_cart");
+  };
 
   return (
     <CartContext.Provider
@@ -79,5 +93,4 @@ export const CartProvider = ({ children }) => {
       {children}
     </CartContext.Provider>
   );
-
 };

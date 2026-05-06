@@ -47,12 +47,9 @@ const Cart = () => {
         <section style={styles.layout}>
           <div style={styles.cartList}>
             {cart.map((item) => (
-              <div key={item.product_id || item.id} style={styles.card}>
+              <div key={item.product_id || item.id || item._id} style={styles.card}>
                 <img
-                  src={
-                    "https://frostyghost23.alwaysdata.net/static/images/" +
-                    item.product_photo
-                  }
+                  src={`https://frostyghost23.alwaysdata.net/static/images/${item.product_photo}`}
                   style={styles.img}
                   alt={item.product_name}
                 />
@@ -96,7 +93,12 @@ const Cart = () => {
 
             <div style={styles.summaryRow}>
               <span>Items</span>
-              <strong>{cart.length}</strong>
+              <strong>
+                {cart.reduce(
+                  (sum, item) => sum + (item.quantity || 1),
+                  0
+                )}
+              </strong>
             </div>
 
             <div style={styles.summaryRow}>
@@ -106,14 +108,16 @@ const Cart = () => {
 
             <button
               style={styles.checkoutBtn}
-              onClick={() =>
+              onClick={() => {
+                if (cart.length === 0) return;
+
                 navigate("/makepayment", {
                   state: {
                     cart,
                     type: "cart",
                   },
-                })
-              }
+                });
+              }}
             >
               Checkout with M-Pesa
             </button>
@@ -265,6 +269,7 @@ const styles = {
     border: "1px solid rgba(226,232,240,0.9)",
     position: "sticky",
     top: "95px",
+    alignSelf: "start",
   },
 
   summaryRow: {

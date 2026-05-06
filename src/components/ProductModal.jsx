@@ -6,31 +6,36 @@ const ProductModal = ({ product, img_url, onClose, navigate }) => {
 
   if (!product) return null;
 
+  const imageUrl = `${img_url}${product.product_photo}`;
+
   return (
     <div style={styles.overlay} onClick={onClose}>
-      <div style={styles.modal}>
-        <div style={styles.content}>
+      <div style={styles.modal} onClick={(e) => e.stopPropagation()}>
+        <button style={styles.close} onClick={onClose}>
+          ✕
+        </button>
 
-          {/* LEFT IMAGE */}
+        <div style={styles.content}>
           <div style={styles.imageBox}>
             <img
-              src={img_url + product.product_photo}
+              src={imageUrl}
               alt={product.product_name}
               style={styles.image}
             />
           </div>
 
-          {/* RIGHT DETAILS */}
           <div style={styles.details}>
-            <h2 style={styles.title}>{product.product_name}</h2>
+            <div>
+              <h2 style={styles.title}>{product.product_name}</h2>
 
-            <p style={styles.desc}>
-              {product.product_description?.slice(0, 140)}...
-            </p>
+              <p style={styles.desc}>
+                {product.product_description}
+              </p>
 
-            <h3 style={styles.price}>
-              KES {Number(product.product_cost).toLocaleString()}
-            </h3>
+              <h3 style={styles.price}>
+                KES {Number(product.product_cost).toLocaleString()}
+              </h3>
+            </div>
 
             <div style={styles.actions}>
               <button
@@ -45,19 +50,16 @@ const ProductModal = ({ product, img_url, onClose, navigate }) => {
 
               <button
                 style={styles.buyBtn}
-                onClick={() =>
-                  navigate("/makepayment", { state: { product } })
-                }
+                onClick={() => {
+                  onClose();
+                  navigate("/makepayment", { state: { product } });
+                }}
               >
                 Buy Now
               </button>
             </div>
           </div>
         </div>
-
-        <button style={styles.close} onClick={onClose}>
-          ✕
-        </button>
       </div>
     </div>
   );
@@ -72,10 +74,12 @@ const styles = {
     justifyContent: "center",
     alignItems: "center",
     zIndex: 3000,
+    padding: "20px",
   },
 
   modal: {
-    width: "650px",
+    width: "100%",
+    maxWidth: "650px",
     background: "white",
     borderRadius: "22px",
     padding: "20px",
@@ -86,10 +90,11 @@ const styles = {
   content: {
     display: "flex",
     gap: "18px",
+    flexWrap: "wrap",
   },
 
   imageBox: {
-    flex: 1,
+    flex: "1 1 260px",
   },
 
   image: {
@@ -100,7 +105,7 @@ const styles = {
   },
 
   details: {
-    flex: 1,
+    flex: "1 1 260px",
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-between",
@@ -109,6 +114,7 @@ const styles = {
   title: {
     fontWeight: "950",
     marginBottom: "6px",
+    color: "#0f172a",
   },
 
   desc: {
@@ -140,16 +146,16 @@ const styles = {
     fontWeight: "900",
   },
 
-buyBtn: {
-  flex: 1,
-  background: "#0f172a",
-  color: "white",
-  border: "none",
-  padding: "10px",
-  borderRadius: "12px",
-  cursor: "pointer",
-  fontWeight: "900",
-},
+  buyBtn: {
+    flex: 1,
+    background: "#0f172a",
+    color: "white",
+    border: "none",
+    padding: "10px",
+    borderRadius: "12px",
+    cursor: "pointer",
+    fontWeight: "900",
+  },
 
   close: {
     position: "absolute",
@@ -160,6 +166,7 @@ buyBtn: {
     fontSize: "18px",
     cursor: "pointer",
     borderRadius: "50%",
+    zIndex: 10,
   },
 };
 
