@@ -17,15 +17,26 @@ const Navbar = () => {
 );
 
   useEffect(() => {
+  const loadUser = () => {
     const savedUser = JSON.parse(localStorage.getItem("user"));
     setUser(savedUser);
-  }, []);
+  };
+
+  loadUser();
+
+  window.addEventListener("storage", loadUser);
+
+  return () => {
+    window.removeEventListener("storage", loadUser);
+  };
+}, []);
 
   const logout = () => {
     localStorage.removeItem("user");
     setUser(null);
     setOpenMenu(false);
     navigate("/signin");
+    window.location.reload();
   };
 
   return (
@@ -41,8 +52,11 @@ const Navbar = () => {
           Home
         </button>
 
-        <button style={styles.navBtn} onClick={() => navigate("/cart")}>
-          🛒 Cart
+        <button
+          style={styles.navBtn}
+          onClick={() => navigate("/cart")}
+        >
+          🛒 Cart ({cartCount})
         </button>
 
         <button
@@ -120,12 +134,21 @@ const Navbar = () => {
 
                 <button
                   style={styles.dropdownItem}
-                  onClick={() => navigate("/about")}
+                  onClick={() => {
+                    setOpenMenu(false);
+                    navigate("/about");
+                  }}
                 >
                   About Us
                 </button>
 
-                <button style={styles.dropdownItem} onClick={() => navigate("/contact")}>
+                <button
+                  style={styles.dropdownItem}
+                  onClick={() => {
+                    setOpenMenu(false);
+                    navigate("/contact");
+                  }}
+                >
                   Contact Us
                 </button>
 
@@ -177,7 +200,8 @@ const styles = {
     borderRadius: "10px",
     cursor: "pointer",
     fontWeight: "600",
-    color: "#0f172a",
+    color: "white",
+    transition: "0.3s",
   },
 
   primaryBtn: {
@@ -188,6 +212,7 @@ const styles = {
     color: "white",
     cursor: "pointer",
     fontWeight: "700",
+    transition: "0.3s",
   },
 
   profileBox: {
