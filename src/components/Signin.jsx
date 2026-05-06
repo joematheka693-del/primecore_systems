@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../App.css";
 
+const API_BASE_URL = "https://frostyghost23.alwaysdata.net/api";
+
 const Signin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -15,41 +17,41 @@ const Signin = () => {
 
   const handlesubmit = async (e) => {
     e.preventDefault();
+
     setLoading("Accessing PrimeCore Systems...");
+    setSuccess("");
+    setError("");
 
     try {
       const formData = new FormData();
-      formData.append("email", email);
+      formData.append("email", email.trim());
       formData.append("password", password);
 
-      const response = await axios.post(
-        "http://frostyghost23.alwaysdata.net/api/signin",
-        formData
-      );
+      const response = await axios.post(`${API_BASE_URL}/signin`, formData);
 
       setLoading("");
 
-      if (response.data.message === "User Loggged In successfully") {
+      if (response.data.user) {
         localStorage.setItem("user", JSON.stringify(response.data.user));
-        window.location.href = "/";
-      }
-      else {
-        setError("Access Denied. Invalid credentials.");
+        setSuccess("Login successful. Redirecting...");
+
+        setTimeout(() => {
+          navigate("/");
+        }, 800);
+      } else {
+        setError(response.data.message || "Access Denied. Invalid credentials.");
       }
     } catch (err) {
       setLoading("");
-      setError("System Error: Try again...");
+      setError("System Error: Could not connect to PrimeCore server.");
+      console.error("Signin error:", err);
     }
   };
 
   return (
     <div style={styles.page}>
-
-      {/* CENTER AREA */}
       <div style={styles.centerWrap}>
-
         <div style={styles.card}>
-
           <h2 style={styles.title}>Welcome Back</h2>
           <p style={styles.subtitle}>Sign in to your PrimeCore dashboard</p>
 
@@ -58,7 +60,6 @@ const Signin = () => {
           {error && <div style={styles.error}>{error}</div>}
 
           <form onSubmit={handlesubmit}>
-
             <input
               type="email"
               placeholder="Email Address"
@@ -77,8 +78,8 @@ const Signin = () => {
               required
             />
 
-            <button type="submit" style={styles.button}>
-              Enter System
+            <button type="submit" style={styles.button} disabled={loading}>
+              {loading ? "Checking..." : "Enter System"}
             </button>
           </form>
 
@@ -88,15 +89,12 @@ const Signin = () => {
               Create account
             </Link>
           </p>
-
         </div>
-
       </div>
     </div>
   );
 };
 
-/* 🎨 STYLES */
 const styles = {
   page: {
     minHeight: "100vh",
@@ -104,53 +102,17 @@ const styles = {
     fontFamily: "Inter, sans-serif",
   },
 
-  nav: {
-    display: "flex",
-    justifyContent: "space-between",
-    padding: "18px 40px",
-    background: "rgba(255,255,255,0.85)",
-    backdropFilter: "blur(12px)",
-    borderBottom: "1px solid #e2e8f0",
-    position: "sticky",
-    top: 0,
-  },
-
-  logo: {
-    textDecoration: "none",
-    fontWeight: "700",
-    color: "#2563eb",
-  },
-
-  navLinks: {
-    display: "flex",
-    gap: "10px",
-  },
-
-  navBtn: {
-    background: "transparent",
-    border: "1px solid #cbd5e1",
-    padding: "8px 12px",
-    borderRadius: "8px",
-    cursor: "pointer",
-  },
-
-  navBtnPrimary: {
-    background: "#2563eb",
-    color: "white",
-    border: "none",
-    padding: "8px 12px",
-    borderRadius: "8px",
-  },
-
   centerWrap: {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    height: "calc(100vh - 80px)",
+    minHeight: "100vh",
+    padding: "20px",
   },
 
   card: {
-    width: "380px",
+    width: "100%",
+    maxWidth: "380px",
     background: "white",
     borderRadius: "18px",
     padding: "30px",
@@ -179,6 +141,7 @@ const styles = {
     borderRadius: "10px",
     border: "1px solid #cbd5e1",
     outline: "none",
+    boxSizing: "border-box",
   },
 
   button: {
