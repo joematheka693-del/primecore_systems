@@ -74,8 +74,13 @@ const Addproducts = () => {
       formdata.append("email", user.email);
 
       const response = await axios.post(
-        "http://frostyghost23.alwaysdata.net/api/add_product",
-        formdata
+        "https://frostyghost23.alwaysdata.net/api/add_product",
+        formdata,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
       );
 
       setSuccess(response.data.message || "Product added successfully");
