@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
+  const user = JSON.parse(localStorage.getItem("user"));
 
   const [products, setProducts] = useState([]);
   const [category, setCategory] = useState("all");
@@ -56,7 +57,9 @@ const AdminDashboard = () => {
       `https://frostyghost23.alwaysdata.net/api/delete_product/${id}`
     );
 
-    alert("Product deleted successfully");
+    setProducts((prev) =>
+      prev.filter((p) => p.product_id !== id)
+    );
     fetchProducts();
   } catch (error) {
     console.log(error);
@@ -83,13 +86,25 @@ const AdminDashboard = () => {
     alert("Product updated successfully");
 
     setEditingProduct(null); // close modal
-    fetchProducts(); // refresh list
+    setProducts((prev) =>
+      prev.map((p) =>
+        p.product_id === editingProduct.product_id
+          ? editingProduct
+          : p
+      )
+    ); // refresh list
 
   } catch (error) {
     console.log(error);
     alert("Update failed");
   }
 };
+
+useEffect(() => {
+  if (!user || Number(user?.is_admin) !== 1) {
+    navigate("/");
+  }
+}, [user, navigate]);
 
   return (
     <div style={styles.page}>
@@ -192,7 +207,7 @@ const AdminDashboard = () => {
           <div style={styles.tableRow} key={product.product_id}>
             <div style={styles.productInfo}>
               <img
-                src={img_url + product.product_photo}
+                src={`${img_url}${product.product_photo}`}
                 alt={product.product_name}
                 style={styles.image}
               />
@@ -227,8 +242,15 @@ const AdminDashboard = () => {
       </section>
 
       {editingProduct && (
-        <div style={styles.modalOverlay}>
-          <form style={styles.modal} onSubmit={updateProduct}>
+        <div
+          style={styles.modalOverlay}
+          onClick={() => setEditingProduct(null)}
+        >
+          <form
+            style={styles.modal}
+            onSubmit={updateProduct}
+            onClick={(e) => e.stopPropagation()}
+          >
             <h2>Edit Product</h2>
 
             <input
@@ -504,6 +526,7 @@ const styles = {
     marginBottom: "12px",
     borderRadius: "12px",
     border: "1px solid #cbd5e1",
+    boxSizing: "border-box",
   },
 
   textarea: {
@@ -513,6 +536,7 @@ const styles = {
     marginBottom: "12px",
     borderRadius: "12px",
     border: "1px solid #cbd5e1",
+    boxSizing: "border-box",
   },
 
   modalActions: {
