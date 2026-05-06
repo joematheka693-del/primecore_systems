@@ -33,9 +33,11 @@ const Orders = () => {
 
   useEffect(() => {
     fetchOrders();
-  }, []);
+  }, [user]);
 
   const parseItems = (items) => {
+    if (!items) return [];
+
     try {
       return JSON.parse(items);
     } catch {
@@ -95,7 +97,7 @@ const Orders = () => {
           const items = parseItems(order.items);
 
           return (
-            <div style={styles.card} key={order.id}>
+            <div style={styles.card} key={order.id || order.order_id}>
               <div style={styles.cardTop}>
                 <div>
                   <p style={styles.orderLabel}>Order #{order.id}</p>
@@ -117,11 +119,18 @@ const Orders = () => {
               <div style={styles.itemsBox}>
                 <h4>Items</h4>
 
-                {items.map((item, index) => (
+                {items.length === 0 && (
+                  <p style={{ color: "#64748b" }}>
+                    No item data available
+                  </p>
+                )}
+
+                {Array.isArray(items) &&
+                  items.map((item, index) => (
                   <div style={styles.item} key={index}>
                     <div>
                       <strong>{item.name}</strong>
-                      <p>Qty: {item.quantity}</p>
+                      <p>Qty: {item.quantity || 1}</p>
                     </div>
 
                     <span>KES {Number(item.price).toLocaleString()}</span>
