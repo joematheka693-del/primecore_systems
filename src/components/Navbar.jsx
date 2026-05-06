@@ -17,19 +17,21 @@ const Navbar = () => {
 );
 
   useEffect(() => {
-  const loadUser = () => {
-    const savedUser = JSON.parse(localStorage.getItem("user"));
-    setUser(savedUser);
-  };
+    const loadUser = () => {
+      const savedUser = JSON.parse(localStorage.getItem("user"));
+      setUser(savedUser);
+    };
 
-  loadUser();
+    loadUser();
 
-  window.addEventListener("storage", loadUser);
+    window.addEventListener("storage", loadUser);
+    window.addEventListener("userChanged", loadUser);
 
-  return () => {
-    window.removeEventListener("storage", loadUser);
-  };
-}, []);
+    return () => {
+      window.removeEventListener("storage", loadUser);
+      window.removeEventListener("userChanged", loadUser);
+    };
+  }, []);
 
   const logout = () => {
     localStorage.removeItem("user");

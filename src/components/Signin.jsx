@@ -33,10 +33,14 @@ const Signin = () => {
 
       if (response.data.user) {
         localStorage.setItem("user", JSON.stringify(response.data.user));
+
+        window.dispatchEvent(new Event("userChanged"));
+
         setSuccess("Login successful. Redirecting...");
 
         setTimeout(() => {
           navigate("/");
+          window.location.reload();
         }, 800);
       } else {
         setError(response.data.message || "Access Denied. Invalid credentials.");
