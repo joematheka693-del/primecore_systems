@@ -28,23 +28,36 @@ const Getproducts = () => {
   const addToCart = cartContext?.addToCart;
 
   const fetchProducts = async () => {
-    try {
-      setLoading(true);
-      setError("");
+  try {
+    setLoading(true);
+    setError("");
 
-      const response = await axios.get(
-        `${API_BASE_URL}/get_products`
+    const response = await axios.get(
+      `${API_BASE_URL}/get_products`
+    );
+
+    const gamingPCs = response.data.filter((product) => {
+      const category =
+        product.category?.toLowerCase() || "";
+
+      return (
+        category.includes("gaming") ||
+        category.includes("gaming pc") ||
+        category.includes("pc") ||
+        category.includes("gaming setups")
       );
+    });
 
-      setProducts(response.data);
-      setFiltered(response.data);
-    } catch (err) {
-      console.error(err);
-      setError("Failed to load products");
-    } finally {
-      setLoading(false);
-    }
-  };
+    setProducts(gamingPCs);
+    setFiltered(gamingPCs);
+
+  } catch (err) {
+    console.error(err);
+    setError("Failed to load products");
+  } finally {
+    setLoading(false);
+  }
+};
 
   useEffect(() => {
     fetchProducts();
