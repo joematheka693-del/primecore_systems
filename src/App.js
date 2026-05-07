@@ -2,7 +2,6 @@ import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Signup from './components/Signup';
 import Signin from './components/Signin';
-import GamingSetups from './components/GamingSetups';
 import Navbar from './components/Navbar';
 
 import Addproducts from './components/Addproducts';
@@ -19,7 +18,6 @@ import AdminRepairs from "./components/AdminRepairs";
 import AdminQuotes from "./components/AdminQuotes";
 import AdminAnalytics from "./components/AdminAnalytics";
 import Profile from "./components/Profile";
-import SetupDetails from "./components/SetupDetails";
 import About from "./components/About";
 import ChatBot from "./components/ChatBot";
 import Contact from "./components/Contact";
@@ -42,10 +40,11 @@ function App() {
   return (
     <Router>
       <div className="App d-flex flex-column min-vh-100">
-        <Navbar />
+        
         {/* Main Content */}
         <div className="flex-grow-1">
           <CartProvider>
+            <Navbar />
               <Routes>
               <Route path='/' element={<Home />} />
               <Route path='/products' element={<Getproducts />} />
@@ -58,11 +57,6 @@ function App() {
               <Route path="/profile" element={<Profile />} />
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
-
-              <Route
-                path="/gaming-setup/:id"
-                element={<SetupDetails />}
-              />
 
               <Route path="/admin" element={
                   <AdminRoute>
@@ -128,7 +122,6 @@ function App() {
               <Route path="/makepayment" element={<Makepayment />} />
               <Route path="/orders" element={<Orders />} />
               <Route path='/cart' element={<Cart />} />
-              <Route path="/gaming-setups" element={<GamingSetups />} />
               <Route path='*' element={<Notfound />} />
             </Routes>
 

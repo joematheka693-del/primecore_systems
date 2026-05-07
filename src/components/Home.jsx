@@ -20,23 +20,6 @@ const Home = () => {
         </button>
       </section>
 
-
-      <div
-        style={styles.featureCard}
-        onClick={() => navigate("/gaming-setups")}
-      >
-        <h2>🎮 Gaming Setups</h2>
-
-        <p>
-          Explore RGB battlestations, premium rigs,
-          accessories, and elite desk setups.
-        </p>
-
-        <button style={styles.featureBtn}>
-          Explore Setups →
-        </button>
-      </div>
-
       {/* FEATURES */}
       <section style={styles.section}>
         <h2 style={styles.sectionTitle}>What We Offer</h2>

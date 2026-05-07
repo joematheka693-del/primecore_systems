@@ -61,13 +61,6 @@ const Navbar = () => {
           🛒 Cart
         </button>
 
-        <button
-          style={styles.navBtn}
-          onClick={() => navigate("/gaming-setups")}
-        >
-          Gaming Setups
-        </button>
-
         {!user && (
           <>
             <button style={styles.navBtn} onClick={() => navigate("/signin")}>
