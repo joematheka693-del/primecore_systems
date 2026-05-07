@@ -165,13 +165,6 @@ useEffect(() => {
         >
           Accessories
         </button>
-
-        <button
-          style={category === "offers" ? styles.activeCat : styles.catBtn}
-          onClick={() => setCategory("offers")}
-        >
-          Offers
-        </button>
       </section>
 
       <section style={styles.statsGrid}>

@@ -11,7 +11,6 @@ const SideSlider = ({ onToggle }) => {
     { path: "/accessories", label: "Accessories" },
     { path: "/repairs", label: "Repairs" },
     { path: "/services", label: "Services" },
-    { path: "/offers", label: "Offers" },
   ];
 
   const toggle = () => {

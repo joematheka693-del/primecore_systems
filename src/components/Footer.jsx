@@ -56,13 +56,6 @@ React.useEffect(() => {
           Elite gaming setups, custom PCs, accessories,
           repairs, and next-gen tech solutions.
           </p>
-
-          <div style={styles.socials}>
-            <FaFacebook />
-            <FaTwitter />
-            <FaInstagram />
-            <FaGithub />
-          </div>
         </div>
 
         {/* LINKS */}

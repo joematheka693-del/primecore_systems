@@ -9,7 +9,6 @@ import Getproducts from './components/Getproducts';
 import Accessories from "./components/Accessories";
 import Repairs from "./components/Repairs";
 import Services from "./components/Services";
-import Offers from "./components/Offers";
 import AdminDashboard from "./components/AdminDashboard";
 import AdminRoute from "./components/AdminRoute";
 import Orders from "./components/Orders";
@@ -53,7 +52,6 @@ function App() {
               <Route path="/accessories" element={<Accessories />} />
               <Route path="/repairs" element={<Repairs />} />
               <Route path="/services" element={<Services />} />
-              <Route path="/offers" element={<Offers />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
